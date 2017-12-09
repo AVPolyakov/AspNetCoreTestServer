@@ -1,4 +1,7 @@
-﻿using AppServices;
+﻿using System;
+using AppServices;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,12 +21,18 @@ namespace WebApplication3
 
         public IConfiguration Configuration { get; }
 
+        public IContainer ApplicationContainer { get; private set; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider  ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IValuesHandler, ValuesHandler>();
-            startupSettings.Module1.Provider1(services);
             services.AddMvc();
+            var builder = new ContainerBuilder();
+            builder.Populate(services);
+            builder.RegisterType<ValuesHandler>().As<IValuesHandler>();
+            startupSettings.Module1.Provider1(builder);
+            ApplicationContainer = builder.Build();
+            return new AutofacServiceProvider(ApplicationContainer);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

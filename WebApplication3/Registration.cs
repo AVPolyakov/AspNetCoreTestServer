@@ -1,16 +1,16 @@
 ﻿using System;
-using Microsoft.Extensions.DependencyInjection;
+using Autofac;
 
 namespace WebApplication3
 {
-    public delegate void Registration<T>(IServiceCollection services);
+    public delegate void Registration<T>(ContainerBuilder builder);
 
     public static class Registration
     {
-        public static Registration<T> Create<T, TImplementation>() where T : class where TImplementation : class, T 
-            => _ => _.AddTransient<T, TImplementation>();
+        public static Registration<T> Create<T, TImplementation>()
+            => _ => _.RegisterType<TImplementation>().As<T>();
 
-        public static Registration<T> Create<T>(Func<IServiceProvider, T> implementationFactory) where T : class 
-            => _ => _.AddTransient(implementationFactory);
+        public static Registration<T> Create<T>(Func<IComponentContext, T> implementationFactory)
+            => _ => _.Register(implementationFactory).As<T>();
     }
 }
