@@ -1,11 +1,9 @@
-﻿using System;
-using AppServices;
-using Microsoft.Extensions.DependencyInjection;
+﻿using AppServices;
 
 namespace WebApplication3
 {
     public class StartupSettings
     {
-        public Action<IServiceCollection> Provider1 = _ => _.AddTransient<IProvider1, Provider1>();
+        public Registration<IProvider1> Provider1 = Registration.Create<IProvider1, Provider1>();
     }
 }

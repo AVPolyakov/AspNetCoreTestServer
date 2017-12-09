@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using AppServices;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.DependencyInjection;
 using TypedHttpClient;
 using WebApplication3;
 using WebApplication3.Controllers;
@@ -29,20 +28,19 @@ namespace XUnitTestProject1
         }
 
         private static TestServer TestServer1 => testServer1.Value;
-
-        private static Lazy<TestServer> testServer1 => Lazy.Create(() => new TestServer(new WebHostBuilder()
-            .AddStartupSettings(new StartupSettings {
-                Provider1 = _ => _.AddTransient<IProvider1>(p => new TestProvider1("value1"))
-            })
-            .UseStartup<Startup>()));
+        private static Lazy<TestServer> testServer1 => CreateTestServer(new StartupSettings {
+            Provider1 = Registration.Create<IProvider1>(_ => new TestProvider1("value1"))
+        });
 
         private static TestServer TestServer2 => testServer2.Value;
+        private static Lazy<TestServer> testServer2 => CreateTestServer(new StartupSettings {
+            Provider1 = Registration.Create<IProvider1>(_ => new TestProvider1("value3"))
+        });
 
-        private static Lazy<TestServer> testServer2 => Lazy.Create(() => new TestServer(new WebHostBuilder()
-            .AddStartupSettings(new StartupSettings {
-                Provider1 = _ => _.AddTransient<IProvider1>(p => new TestProvider1("value3"))
-            })
-            .UseStartup<Startup>()));
+        private static Lazy<TestServer> CreateTestServer(StartupSettings startupSettings)
+            => Lazy.Create(() => new TestServer(new WebHostBuilder()
+                .AddStartupSettings(startupSettings)
+                .UseStartup<Startup>()));
     }
 
     public class TestProvider1 : IProvider1

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApplication3
 {
@@ -14,7 +13,7 @@ namespace WebApplication3
         public static IWebHost BuildWebHost(string[] args)
         {
             return WebHost.CreateDefaultBuilder(args)
-                .AddStartupSettings(new StartupSettings ())
+                .AddStartupSettings(new StartupSettings())
                 .UseStartup<Startup>()
                 .Build();
         }
