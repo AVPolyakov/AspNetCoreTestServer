@@ -1,24 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AppServices;
+﻿using AppServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace WebApplication3
 {
     public class Startup
     {
-        private readonly IStartupConfigurationService configurationService;
+        private readonly StartupSettings startupSettings;
 
-        public Startup(IConfiguration configuration, IStartupConfigurationService configurationService)
+        public Startup(IConfiguration configuration, StartupSettings startupSettings)
         {
-            this.configurationService = configurationService;
+            this.startupSettings = startupSettings;
             Configuration = configuration;
         }
 
@@ -28,7 +22,7 @@ namespace WebApplication3
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IValuesHandler, ValuesHandler>();
-            configurationService.ConfigureServices(services);
+            startupSettings.Provider1(services);
             services.AddMvc();
         }
 

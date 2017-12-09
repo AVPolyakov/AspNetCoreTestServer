@@ -29,44 +29,29 @@ namespace XUnitTestProject1
         }
 
         private static TestServer TestServer1 => testServer1.Value;
+
         private static Lazy<TestServer> testServer1 => Lazy.Create(() => new TestServer(new WebHostBuilder()
-            .ConfigureServices(
-                services => services.AddTransient<IStartupConfigurationService>(
-                    provider => new TestStartupConfigurationService(() => "value1")))
+            .AddStartupSettings(new StartupSettings {
+                Provider1 = _ => _.AddTransient<IProvider1>(p => new TestProvider1("value1"))
+            })
             .UseStartup<Startup>()));
 
         private static TestServer TestServer2 => testServer2.Value;
+
         private static Lazy<TestServer> testServer2 => Lazy.Create(() => new TestServer(new WebHostBuilder()
-            .ConfigureServices(
-                services => services.AddTransient<IStartupConfigurationService>(
-                    provider => new TestStartupConfigurationService(() => "value3")))
+            .AddStartupSettings(new StartupSettings {
+                Provider1 = _ => _.AddTransient<IProvider1>(p => new TestProvider1("value3"))
+            })
             .UseStartup<Startup>()));
     }
 
-    public class TestStartupConfigurationService : IStartupConfigurationService
+    public class TestProvider1 : IProvider1
     {
-        private readonly Func<string> value;
+        public string Value { get; }
 
-        public TestStartupConfigurationService(Func<string> value)
+        public TestProvider1(string value1)
         {
-            this.value = value;
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddTransient<IXxxProvider>(provider => new TestXxxProvider(this));
-        }
-
-        public class TestXxxProvider : IXxxProvider
-        {
-            private readonly TestStartupConfigurationService startupConfigurationService;
-
-            public TestXxxProvider(TestStartupConfigurationService startupConfigurationService)
-            {
-                this.startupConfigurationService = startupConfigurationService;
-            }
-
-            public string Value => startupConfigurationService.value();
+            Value = value1;
         }
     }
 }

@@ -10,21 +10,21 @@ namespace AppServices
 
     public class ValuesHandler : IValuesHandler
     {
-        private readonly IXxxProvider xxxProvider;
+        private readonly IProvider1 provider1;
 
-        public ValuesHandler(IXxxProvider xxxProvider)
+        public ValuesHandler(IProvider1 provider1)
         {
-            this.xxxProvider = xxxProvider;
+            this.provider1 = provider1;
         }
 
         public Task<string> Get(string x)
         {
-            return Task.FromResult($"M1_{xxxProvider.Value}_{x}");
+            return Task.FromResult($"M1_{provider1.Value}_{x}");
         }
 
         public Task<string> M2(string x)
         {
-            return Task.FromResult($"M2_{xxxProvider.Value}_{x}");
+            return Task.FromResult($"M2_{provider1.Value}_{x}");
         }
     }
 }

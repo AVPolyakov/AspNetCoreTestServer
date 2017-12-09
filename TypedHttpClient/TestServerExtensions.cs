@@ -1,5 +1,7 @@
 using System;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace TypedHttpClient
 {
@@ -9,6 +11,6 @@ namespace TypedHttpClient
         {
             return Implementation.Create<T>(new HandlerProxy(controllerType, 
                 testServer.CreateClient()));
-        }        
+        }
     }
 }
