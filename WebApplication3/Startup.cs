@@ -29,8 +29,8 @@ namespace WebApplication3
             services.AddMvc();
             var builder = new ContainerBuilder();
             builder.Populate(services);
+            builder.RegisterModule(new Module1(startupSettings.Module1));
             builder.RegisterType<ValuesHandler>().As<IValuesHandler>();
-            startupSettings.Module1.Provider1(builder);
             ApplicationContainer = builder.Build();
             return new AutofacServiceProvider(ApplicationContainer);
         }
