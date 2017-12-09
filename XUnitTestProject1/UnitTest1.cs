@@ -15,27 +15,32 @@ namespace XUnitTestProject1
     //http://geeklearning.io/a-different-approach-to-test-your-asp-net-core-application/
     public class Tests
     {
-        private const string value1 = "value1";
-
         [Fact]
         public async Task Test1()
         {
-            var value2 = "value2";
-            var result = await handler.M2(value2);
-            Assert.Equal($"M2_{value1}_{value2}", result);
+            {
+                var handler = TestServer1.CreateClient<IValuesHandler>(typeof(ValuesController));
+                Assert.Equal("M2_value1_value2", await handler.M2("value2"));
+            }
+            {
+                var handler = TestServer2.CreateClient<IValuesHandler>(typeof(ValuesController));
+                Assert.Equal("M2_value3_value4", await handler.M2("value4"));
+            }
         }
 
-        private static readonly IValuesHandler handler = GetHandler();
+        private static TestServer TestServer1 => testServer1.Value;
+        private static Lazy<TestServer> testServer1 => Lazy.Create(() => new TestServer(new WebHostBuilder()
+            .ConfigureServices(
+                services => services.AddTransient<IStartupConfigurationService>(
+                    provider => new TestStartupConfigurationService(() => "value1")))
+            .UseStartup<Startup>()));
 
-        private static IValuesHandler GetHandler()
-        {
-            return new TestServer(new WebHostBuilder()
-                    .ConfigureServices(
-                        services => services.AddTransient<IStartupConfigurationService>(
-                            provider => new TestStartupConfigurationService(() => value1)))
-                    .UseStartup<Startup>())
-                .CreateClient<IValuesHandler>(typeof(ValuesController));
-        }
+        private static TestServer TestServer2 => testServer2.Value;
+        private static Lazy<TestServer> testServer2 => Lazy.Create(() => new TestServer(new WebHostBuilder()
+            .ConfigureServices(
+                services => services.AddTransient<IStartupConfigurationService>(
+                    provider => new TestStartupConfigurationService(() => "value3")))
+            .UseStartup<Startup>()));
     }
 
     public class TestStartupConfigurationService : IStartupConfigurationService
