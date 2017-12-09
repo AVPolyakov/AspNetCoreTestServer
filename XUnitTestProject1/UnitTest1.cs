@@ -29,12 +29,16 @@ namespace XUnitTestProject1
 
         private static TestServer TestServer1 => testServer1.Value;
         private static Lazy<TestServer> testServer1 => CreateTestServer(new StartupSettings {
-            Provider1 = Registration.Create<IProvider1>(_ => new TestProvider1("value1"))
+            Module1 = new Module1Settings {
+                Provider1 = Registration.Create<IProvider1>(_ => new TestProvider1("value1"))
+            }
         });
 
         private static TestServer TestServer2 => testServer2.Value;
         private static Lazy<TestServer> testServer2 => CreateTestServer(new StartupSettings {
-            Provider1 = Registration.Create<IProvider1>(_ => new TestProvider1("value3"))
+            Module1 = new Module1Settings {
+                Provider1 = Registration.Create<IProvider1>(_ => new TestProvider1("value3"))
+            }
         });
 
         private static Lazy<TestServer> CreateTestServer(StartupSettings startupSettings)

@@ -22,7 +22,7 @@ namespace WebApplication3
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IValuesHandler, ValuesHandler>();
-            startupSettings.Provider1(services);
+            startupSettings.Module1.Provider1(services);
             services.AddMvc();
         }
 

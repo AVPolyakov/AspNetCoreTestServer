@@ -1,9 +1,7 @@
-﻿using AppServices;
-
-namespace WebApplication3
+﻿namespace WebApplication3
 {
     public class StartupSettings
     {
-        public Registration<IProvider1> Provider1 = Registration.Create<IProvider1, Provider1>();
+        public Module1Settings Module1 = new Module1Settings();
     }
 }
