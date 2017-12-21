@@ -32,7 +32,7 @@ namespace WebApplication3
             builder.RegisterModule(new Module1(startupSettings.Module1));
             builder.RegisterType<ValuesHandler>().As<IValuesHandler>();
             ApplicationContainer = builder.Build();
-            return new AutofacServiceProvider(ApplicationContainer);
+            return new AutofacServiceProvider(startupSettings.ComponentContextFunc(ApplicationContainer));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

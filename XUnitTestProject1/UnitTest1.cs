@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using AppServices;
+using Autofac;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using TypedHttpClient;
@@ -24,6 +25,16 @@ namespace XUnitTestProject1
             {
                 var handler = TestServer2.CreateClient<IValuesHandler>(typeof(ValuesController));
                 Assert.Equal("M2_value3_value4", await handler.M2("value4"));
+            }
+            {
+                var handler = new TestServer(new WebHostBuilder()
+                        .AddStartupSettings(new StartupSettings {
+                            ComponentContextFunc = container => container.BeginLifetimeScope(
+                                builder => builder.Register(context => new TestProvider1("value5")).As<IProvider1>())
+                        })
+                        .UseStartup<Startup>())
+                    .CreateClient<IValuesHandler>(typeof(ValuesController));
+                Assert.Equal("M2_value5_value6", await handler.M2("value6"));
             }
         }
 
